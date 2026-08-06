@@ -11,3 +11,17 @@
 .form-group{border:0;padding:0;margin:0 0 26px}.form-group legend{font-weight:900;margin-bottom:12px}.chip-grid{display:flex;flex-wrap:wrap;gap:9px}.chip{position:relative}.chip input{position:absolute;opacity:0}.chip span{display:block;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer;font-weight:750}.chip input:checked+span{background:var(--ink);color:#fff;border-color:var(--ink)}.settings .primary-button{width:100%}
 @media(max-width:620px){.app-shell{padding-inline:12px}.topbar{grid-template-columns:64px 1fr 64px;min-height:76px}.ghost-button{font-size:.7rem;padding:7px}.screen{padding-top:20px}.home-panel{margin-top:1vh}.mode-grid{grid-template-columns:1fr}.mode-card{min-height:135px}.quiz-header{align-items:flex-start}.score{flex-direction:column}.score span{font-size:.75rem;padding:6px 9px}.quiz-card{border-radius:20px}.fretboard{height:220px}.keyboard{height:180px}.black-key{height:60%;width:10%;margin-left:-.5%}.chord-choices{grid-template-columns:1fr}.eyebrow{display:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* V2.1: 빠른 프렛 선택과 에보니 지판 */
+.quick-fret{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+.quick-fret legend{margin-bottom:7px}.quick-fret p{margin:0 0 14px;color:var(--muted);font-size:.86rem}
+.fretboard{background:linear-gradient(100deg,#100f0e,#292725 46%,#12110f);border:1px solid #47433e;border-radius:12px 12px 4px 4px;box-shadow:inset 0 0 54px rgba(0,0,0,.82),0 10px 24px rgba(10,12,11,.22)}
+.fret-cell{border-right-color:rgba(218,218,207,.72);box-shadow:1px 0 1px rgba(255,255,255,.18)}
+.fret-cell::after{content:none}
+.strings{inset:0;display:block}
+.string{position:absolute;left:0;right:0;top:var(--string-y);height:var(--thickness);transform:translateY(-50%);background:linear-gradient(#fff9dc,#817d70,#f7efcd);box-shadow:0 1px 3px rgba(0,0,0,.9)}
+.nut{background:linear-gradient(90deg,#f8f3df,#a9a391)}
+.marker{width:32px;height:32px;background:#ff6a32;border:4px solid #fff9d8;box-shadow:0 0 0 4px rgba(255,106,50,.3),0 0 22px rgba(255,125,54,.95)}
+.inlay{background:#d8d2c1aa}
+.fret-numbers{min-width:720px;display:grid;grid-template-columns:repeat(12,1fr);padding-top:9px}
+.fret-number{text-align:center;color:var(--accent-dark);font-size:.88rem;font-weight:900;letter-spacing:.02em}
