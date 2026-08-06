@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#263238" />
+  <meta name="description" content="기타 지판의 음과 실제 연주 가능한 코드폼을 익히는 반응형 퀴즈 앱" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>기타 지판 퀴즈</title>
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <button id="backButton" class="icon-button hidden" type="button" aria-label="이전 화면">←</button>
+      <h1 id="screenTitle">기타 지판 퀴즈</h1>
+      <button id="installButton" class="ghost-button hidden" type="button">앱 설치</button>
+    </header>
+
+    <main id="screen" class="screen" tabindex="-1"></main>
+  </div>
+
+  <template id="homeTemplate">
+    <section class="home-panel card">
+      <div class="brand-mark" aria-hidden="true">♬</div>
+      <h2>기타 지판 퀴즈</h2>
+      <p>지판의 음과 실제 연주 가능한 코드폼을 간단한 퀴즈로 익혀보세요.</p>
+      <div class="stack-actions">
+        <button class="primary-button" data-action="start-setup">게임 시작</button>
+        <button class="secondary-button" data-action="settings">설정</button>
+      </div>
+      <p class="small-note">컴퓨터·iPad·안드로이드 브라우저에서 사용할 수 있으며 화면 크기에 맞춰 자동 조정됩니다.</p>
+    </section>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
