@@ -42,3 +42,6 @@
 .fret-number{text-align:center;color:var(--accent-dark);font-size:.88rem;font-weight:900;letter-spacing:.02em}
 .open-marker{background:#151513;border-color:#fff9d8;box-shadow:0 0 0 3px rgba(255,249,216,.32),0 0 18px rgba(255,255,225,.65)}
 .level-list{display:grid;gap:11px}.level-card{width:100%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:15px;text-align:left;padding:15px;border:1px solid var(--line);border-radius:17px;background:#fff;color:var(--ink);cursor:pointer}.level-card:hover,.level-card:focus-visible{border-color:var(--accent);transform:translateX(3px)}.level-number{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--ink);color:#fff;font-weight:900}.level-card strong,.level-card small{display:block}.level-card small{margin-top:4px;color:var(--muted);line-height:1.35}.level-card b{color:var(--accent);font-size:1.2rem}
+.fretboard-scroll.compact{overflow-x:hidden}
+.fretboard-scroll.compact .fretboard,.fretboard-scroll.compact .fret-numbers{width:100%;min-width:0}
+.fretboard-scroll.compact .fretboard{height:clamp(205px,42vw,250px)}
