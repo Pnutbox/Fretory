@@ -1,7 +1,7 @@
 {
-  "name":"기타 지판 트레이너 V2",
-  "short_name":"지판 트레이너",
-  "description":"기타 지판의 음과 코드 구성음을 익히는 학습 앱",
+  "name":"코드 앤 프렛",
+  "short_name":"코드 앤 프렛",
+  "description":"기타 지판의 음, 실전 코드폼과 화성학을 함께 익히는 학습 앱",
   "lang":"ko",
   "start_url":"./",
   "scope":"./",
