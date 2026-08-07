@@ -67,3 +67,6 @@
 
 /* V2.9: 난이도별 코드 종류 선택 */
 .field-help{margin:-4px 0 13px;color:var(--muted);font-size:.86rem;line-height:1.55}.chord-type-actions{display:flex;gap:8px;margin-bottom:12px}.chord-type-actions button{padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);font-size:.76rem;font-weight:850;cursor:pointer}.chord-type-groups{display:grid;gap:10px}.chord-type-group{padding:16px;border:1px solid var(--line);border-radius:17px;background:#fff}.chord-type-heading{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}.chord-type-heading>b{flex:none;padding:6px 9px;border-radius:9px;background:var(--ink);color:#fff;font-size:.72rem}.chord-type-heading strong,.chord-type-heading small{display:block}.chord-type-heading small{margin-top:3px;color:var(--muted);font-size:.76rem;line-height:1.45}
+
+/* V3.0: 코드 종류와 위치·폼을 독립 설정 */
+.chord-type-picker>.field-help{font-size:0}.chord-type-picker>.field-help::after{content:"기초부터 고급 화음까지 학습 순서에 맞춰 정리했습니다. 위치와 코드폼은 코드 문제 시작 화면에서 별도로 선택합니다.";font-size:.86rem}
