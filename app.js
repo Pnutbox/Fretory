@@ -79,18 +79,18 @@ class Fretboard{
     const fretCount=viewEnd-firstFret+1;
     const edge=n=>1-Math.pow(2,-n/12);
     const rangeStart=edge(firstFret-1),rangeEnd=edge(viewEnd);
+    const boundaryOf=current=>((edge(current)-rangeStart)/(rangeEnd-rangeStart))*100;
     const positionOf=current=>(((edge(current-1)+edge(current))/2-rangeStart)/(rangeEnd-rangeStart))*100;
-    const widths=Array.from({length:fretCount},(_,i)=>edge(firstFret+i)-edge(firstFret+i-1));
     const visibleInlays=[3,5,7,9].filter(n=>n>=firstFret&&n<=viewEnd);
     target.innerHTML=`<div class="fretboard-scroll ${compact?'compact':''}" aria-label="기타 지판 ${viewStart===0?'너트부터 ':''}${firstFret}~${viewEnd}프렛">
-      <div class="fretboard">${viewStart===0?'<div class="nut"></div>':''}<div class="fret-grid" style="grid-template-columns:${widths.map(w=>`${w}fr`).join(' ')}">${Array.from({length:fretCount},(_,i)=>`<div class="fret-cell" data-fret="${firstFret+i}"></div>`).join('')}</div>
+      <div class="fretboard">${viewStart===0?'<div class="nut"></div>':''}<div class="fret-grid">${Array.from({length:fretCount},(_,i)=>`<i class="fret-wire" style="left:${boundaryOf(firstFret+i)}%"></i>`).join('')}</div>
       <div class="strings">${STRINGS.map((_,i)=>`<div class="string" style="--thickness:${1+i*.38}px;--string-y:${16+i*13.6}%"></div>`).join('')}</div>
       ${visibleInlays.map(n=>`<i class="inlay" style="left:${positionOf(n)}%"></i>`).join('')}
       ${viewEnd>=12&&firstFret<=12?[38,62].map(y=>`<i class="inlay" style="left:${positionOf(12)}%;top:${y}%"></i>`).join(''):''}
       ${barre?`<i class="barre" style="left:${positionOf(barre.fret)}%;top:${16+(5-barre.to)*13.6}%;height:${(barre.to-barre.from)*13.6}%"><span>1</span></i>`:''}
       ${stringStates.map((state,i)=>state?`<span class="string-state ${state}" style="top:${16+i*13.6}%">${state==='open'?'○':'×'}</span>`:'').join('')}
       ${tones.filter(t=>t.fret>0&&!(barre&&t.fret===barre.fret&&t.finger===1)).map(t=>`<i class="marker" style="left:${positionOf(t.fret)}%;top:${16+t.string*13.6}%" title="${t.fret}프렛, ${t.finger}번 손가락"><span>${t.finger||''}</span></i>`).join('')||(!tones.length?`<i class="marker" style="left:${positionOf(fret)}%;top:${16+stringIndex*13.6}%"></i>`:'')}
-      </div><div class="fret-numbers" style="grid-template-columns:${widths.map(w=>`${w}fr`).join(' ')}" aria-hidden="true">${Array.from({length:fretCount},(_,i)=>`<span class="fret-number">${firstFret+i}</span>`).join('')}</div></div>`;
+      </div><div class="fret-numbers" aria-hidden="true">${Array.from({length:fretCount},(_,i)=>`<span class="fret-number" style="left:${positionOf(firstFret+i)}%">${firstFret+i}</span>`).join('')}</div></div>`;
   }
 }
 
