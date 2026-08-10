@@ -81,3 +81,44 @@
 /* V4.2: 브랜드 로고, 문제 마커와 프렛 숫자 가독성 */
 .topbar{grid-template-columns:auto minmax(0,1fr) auto;gap:10px}.title-wrap{justify-self:start;display:grid;grid-template-columns:42px minmax(0,auto);grid-template-rows:auto auto;align-items:center;column-gap:11px;text-align:left}.title-wrap::before{content:"";grid-column:1;grid-row:1/3;width:42px;height:42px;border-radius:12px;background:repeating-linear-gradient(0deg,transparent 0 6px,rgba(245,238,211,.82) 6px 7px),repeating-linear-gradient(90deg,transparent 0 12px,rgba(225,221,204,.46) 12px 14px),linear-gradient(135deg,#121614,#30362f);border:1px solid #4b554d;box-shadow:inset 0 0 12px #0008,0 5px 13px rgba(23,34,29,.16)}.title-wrap .eyebrow{grid-column:2;grid-row:1;align-self:end;line-height:1}.title-wrap h1{grid-column:2;grid-row:2;align-self:start;line-height:1.12}.icon-button{width:38px;height:38px;display:grid;place-items:center;border-radius:12px}.icon-button:hover,.icon-button:focus-visible{background:#ebe9df}.marker{width:30px;height:30px;background:#f47a50;border:3px solid #fff1d6;box-shadow:0 0 0 2px rgba(244,122,80,.22),0 4px 11px rgba(18,14,11,.42);font-size:.8rem}.barre{width:28px;background:#f47a50;border:3px solid #fff1d6;box-shadow:0 0 0 2px rgba(244,122,80,.22),0 4px 11px rgba(18,14,11,.38)}.open-marker{background:#20231f;border-color:#fff1d6;box-shadow:0 0 0 2px rgba(255,241,214,.2),0 4px 10px rgba(0,0,0,.34)}.fret-numbers{height:38px}.fret-number{top:7px;color:#703b29;font-size:1rem;font-weight:950;letter-spacing:0;text-shadow:0 1px 0 #fff,1px 0 0 #fff,-1px 0 0 #fff}
 @media(max-width:620px){.topbar{grid-template-columns:auto minmax(0,1fr) auto;gap:7px}.title-wrap{grid-template-columns:36px minmax(0,auto);column-gap:8px}.title-wrap::before{width:36px;height:36px;border-radius:10px}.title-wrap .eyebrow{display:block;font-size:.55rem;letter-spacing:.11em}.topbar h1{font-size:.94rem}.icon-button{width:34px;height:34px}.marker{width:29px;height:29px}.fret-number{font-size:.96rem}}
+
+/* V4.3: aligned open/mute states and larger fret labels */
+.string-state{
+  left:16px;
+  width:26px;
+  height:26px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  color:transparent;
+  font-size:0;
+}
+.string-state.open,
+.string-state.muted{
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+.string-state.open::before{
+  content:"";
+  width:15px;
+  height:15px;
+  border:2.5px solid #fff1d6;
+  border-radius:50%;
+  box-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+.string-state.muted::before{
+  content:"×";
+  color:#f29472;
+  font-size:21px;
+  font-weight:900;
+  line-height:1;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);
+}
+.fret-numbers{height:42px}
+.fret-number{top:6px;font-size:1.14rem}
+@media(max-width:620px){
+  .string-state{left:14px;width:24px;height:24px}
+  .fret-number{font-size:1.07rem}
+}
