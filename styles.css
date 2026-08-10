@@ -235,3 +235,31 @@
     font-size:39px;
   }
 }
+
+/* V4.7: compact mobile quiz layout and always-reachable next button */
+@media(max-width:620px){
+  .app-shell{padding-bottom:20px}
+  .topbar{min-height:62px}
+  .screen{padding-top:10px}
+  .quiz-header{align-items:center;gap:8px;margin-bottom:9px}
+  .quiz-header h2{margin-top:2px;font-size:1.38rem;line-height:1.08;letter-spacing:-.04em}
+  .quiz-header .section-kicker{font-size:.6rem;letter-spacing:.09em}
+  .score{flex-direction:row;gap:4px}
+  .score span{padding:5px 7px;border-radius:9px;font-size:.66rem}
+  .quiz-card{padding:9px;border-radius:17px}
+  .fretboard-scroll{padding:3px 0 6px}
+  .fretboard-scroll.compact .fretboard{height:174px}
+  .fretboard-scroll .fret-numbers{height:34px}
+  .fretboard-scroll .fret-number{top:2px;font-size:1.04rem}
+  .prompt{margin:7px 0 5px}
+  .prompt strong{font-size:.94rem}
+  .prompt p{margin:2px 0;font-size:.72rem}
+  .keyboard{height:138px;margin-top:7px}
+  .white-key{padding-bottom:9px}
+  .black-key{padding-bottom:7px}
+  .chord-legend{margin-top:5px;gap:4px 10px;font-size:.67rem}
+  .chord-choices{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:9px auto}
+  .choice-button{min-width:0;padding:11px 5px;font-size:.82rem}
+  .feedback{min-height:27px;margin:5px 0;font-size:.83rem}
+  #next:not(.hidden){position:fixed;z-index:50;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(360px,calc(100vw - 24px));padding:13px 18px;box-shadow:0 8px 28px rgba(23,34,29,.34)}
+}
