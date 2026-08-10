@@ -158,3 +158,35 @@
   .string-state{left:14px;width:24px;height:24px}
   .fret-number{font-size:1.07rem}
 }
+
+/* V4.5: larger, higher-contrast open and mute symbols */
+.fretboard .string-state{
+  left:19px;
+  width:36px;
+  height:36px;
+}
+.fretboard .string-state.open::before{
+  content:"";
+  width:24px;
+  height:24px;
+  border:3px solid #fff4d8;
+  border-radius:50%;
+  background:rgba(19,20,18,.72);
+  box-shadow:0 0 0 2px rgba(255,244,216,.18),0 2px 6px rgba(0,0,0,.62);
+}
+.fretboard .string-state.muted::before{
+  content:"\00D7";
+  width:26px;
+  height:30px;
+  color:#ff9a75;
+  font-size:32px;
+  font-weight:950;
+  line-height:28px;
+  text-align:center;
+  text-shadow:0 1px 2px #000,0 0 5px rgba(255,154,117,.34);
+}
+@media(max-width:620px){
+  .fretboard .string-state{left:17px;width:32px;height:32px}
+  .fretboard .string-state.open::before{width:22px;height:22px}
+  .fretboard .string-state.muted::before{font-size:30px}
+}
