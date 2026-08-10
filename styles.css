@@ -190,3 +190,48 @@
   .fretboard .string-state.open::before{width:22px;height:22px}
   .fretboard .string-state.muted::before{font-size:30px}
 }
+
+/* V4.6: full-size open and mute symbols */
+.fretboard .string-state,
+.fretboard-scroll.compact .fretboard .string-state{
+  left:22px;
+  width:44px;
+  height:44px;
+  z-index:9;
+}
+.fretboard .string-state.open::before,
+.fretboard-scroll.compact .fretboard .string-state.open::before{
+  width:32px;
+  height:32px;
+  border:4px solid #fff7db;
+  background:#1b1d1a;
+  box-shadow:0 0 0 2px rgba(255,247,219,.26),0 3px 8px rgba(0,0,0,.7);
+}
+.fretboard .string-state.muted::before,
+.fretboard-scroll.compact .fretboard .string-state.muted::before{
+  width:38px;
+  height:40px;
+  color:#ff8a63;
+  font-size:42px;
+  line-height:38px;
+  -webkit-text-stroke:.6px #ffb094;
+  text-shadow:0 2px 3px #000,0 0 7px rgba(255,138,99,.48);
+}
+@media(max-width:620px){
+  .fretboard .string-state,
+  .fretboard-scroll.compact .fretboard .string-state{
+    left:20px;
+    width:40px;
+    height:40px;
+  }
+  .fretboard .string-state.open::before,
+  .fretboard-scroll.compact .fretboard .string-state.open::before{
+    width:29px;
+    height:29px;
+    border-width:4px;
+  }
+  .fretboard .string-state.muted::before,
+  .fretboard-scroll.compact .fretboard .string-state.muted::before{
+    font-size:39px;
+  }
+}
