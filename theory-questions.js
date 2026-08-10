@@ -76,7 +76,20 @@ function diverseQuestion(book,level,i){
   if(branch===2)return mcq(`2-5-${i}`,'슬래시 코드 분석','G/B의 지정 베이스음은?','B',['G','B','D','F♯'],'슬래시 뒤의 B가 베이스음이다.',i);if(branch===3)return ox(`2-5-${i}`,'보이스 리딩','각 성부를 가능한 가까운 코드톤으로 이동시키면 대체로 연결이 매끄러워진다.',true,'최소 이동은 보이스 리딩의 기본 원리다.');return mcq(`2-5-${i}`,'비화성음 구별','강박에서 앞 화음의 음이 유지되었다가 순차 해결되는 비화성음은?','계류음',NON_CHORD_TONES,'계류음은 앞 화음의 음이 지속되어 불협을 만든 뒤 순차 해결된다.',i)
 }
 
-const makeBook=(book,factory)=>Object.fromEntries([1,2,3,4,5].map(level=>[level,Array.from({length:100},(_,i)=>diverseQuestion(book,level,i)||factory(level,i))]));
+function scenarioQuestion(book,level,i){
+  if(level<4)return null;const key=pick(MAJOR_KEYS,i),root=i%12,degree=i%7;
+  if(book===1&&level===4){const quality=DIATONIC_MAJOR[degree];return mcq(`1-4-${i}`,'상황형 · 다이아토닉',`${key[0]}장조 곡에서 ${degree+1}도 위에 7화음을 쌓았다. 예상되는 코드 유형은?`,quality,DIATONIC_MAJOR,`메이저 다이아토닉의 ${degree+1}도 7화음은 ${quality}이다.`,i)}
+  if(book===1&&level===5){const types=[['9','1 3 5 ♭7 9'],['maj9','1 3 5 7 9'],['m9','1 ♭3 5 ♭7 9'],['13','1 3 5 ♭7 9 13']],t=types[Math.floor(i/12)%types.length],contexts=['편곡자가 코드의 기본 성질을 유지하며 텐션을 추가하려 한다.','멜로디의 텐션과 충돌하지 않도록 코드톤을 확인하려 한다.','보이싱에서 5도를 생략하더라도 핵심 성질을 표시하려 한다.'],context=pick(contexts,i);return mcq(`1-5-${i}`,'상황형 · 텐션코드',`${context} ${NOTES[root]}${t[0]}의 핵심 구성 공식은?`,t[1],types.map(x=>x[1]),`${t[0]}의 핵심 공식은 ${t[1]}이다.`,i)}
+  if(book===2&&level===4){const cases=[['V7/V','세컨더리 도미넌트'],['♭VIImaj7','모달 인터체인지'],['subV7/I','트라이톤 대리'],['IIm7 → V7 → Imaj7','2-5-1']],c=cases[Math.floor(i/12)%cases.length];return mcq(`2-4-${i}`,'상황형 · 코드 진행',`${key[0]}장조 편곡에서 ${c[0]}을 사용했다. 가장 직접적인 설명은?`,c[1],cases.map(x=>x[1]),`${c[0]}은 ${c[1]}의 대표적인 사례다.`,i)}
+  const scenarioRoot=Math.floor(i/3)%12,third=NOTES[(scenarioRoot+4)%12],fifth=NOTES[(scenarioRoot+7)%12],slash=`${NOTES[scenarioRoot]}/${third}`;if(i%3===0)return mcq(`2-5-${i}`,'상황형 · 보이싱',`베이스가 ${third}음을 유지하고 상부 성부가 ${NOTES[scenarioRoot]} 메이저를 연주한다. 적절한 표기는?`,slash,[slash,`${NOTES[scenarioRoot]}/${fifth}`,`${third}/${NOTES[scenarioRoot]}`,`${NOTES[scenarioRoot]}sus4`],`루트는 ${NOTES[scenarioRoot]}, 베이스는 ${third}이므로 ${slash}이다.`,i);if(i%3===1){const next=NOTES[(scenarioRoot+5)%12];return mcq(`2-5-${i}`,'상황형 · 보이스 리딩',`${NOTES[scenarioRoot]}음에서 가장 작은 상행으로 ${next}음에 도착하는 이동은?`,'완전4도 상행',['반음 상행','장2도 상행','장3도 상행','완전4도 상행'],`${NOTES[scenarioRoot]}에서 ${next}까지는 5반음, 완전4도다.`,i)}const tone=NON_CHORD_TONES[Math.floor(i/3)%NON_CHORD_TONES.length];return mcq(`2-5-${i}`,'상황형 · 비화성음',`${NOTES[scenarioRoot]}장조 멜로디 분석에서 화음 밖의 음을 ${tone}으로 분류했다. 이 용어가 속하는 범주는?`,'비화성음',['코드톤','비화성음','조표','종지'],`${tone}은 비화성음의 세부 유형이다.`,i)
+}
+
+function audioQuestion(book,level,i){
+  if(i%2===0){const semitones=pick([2,3,4,5,7,8,9,10,11],i+level+book),answer=INTERVALS[semitones];return{...mcq(`${book}-${level}-${i}`,'청음 · 음정','재생되는 두 음의 음정은?',answer,INTERVALS,`두 음의 거리는 ${semitones}반음으로 ${answer}이다.`,i),audio:{kind:'interval',notes:[0,semitones]}}}
+  const qualities=[['Major',[0,4,7]],['minor',[0,3,7]],['augmented',[0,4,8]],['diminished',[0,3,6]]],q=pick(qualities,i+level+book);return{...mcq(`${book}-${level}-${i}`,'청음 · 3화음','재생되는 3화음의 성질은?',q[0],qualities.map(x=>x[0]),`${q[0]} 3화음의 음정 구조를 들을 수 있다.`,i),audio:{kind:'chord',notes:q[1]}}
+}
+
+const makeBook=(book,factory)=>Object.fromEntries([1,2,3,4,5].map(level=>[level,Array.from({length:100},(_,i)=>i>=90?audioQuestion(book,level,i):scenarioQuestion(book,level,i)||diverseQuestion(book,level,i)||factory(level,i))]));
 export const THEORY_LIBRARY={1:makeBook(1,book1),2:makeBook(2,book2)};
 export const THEORY_SCOPES={
   1:{title:'기초 화성학',subtitle:'음정부터 텐션코드까지',description:'기초악전 · 음정 · 3화음 · 조성과 음계 · 다이아토닉 · 7화음 · 텐션'},

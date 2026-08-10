@@ -74,3 +74,6 @@
 /* V4.0: CAGED 설정과 심화 통계 */
 .caged-setup .form-picker{margin-bottom:18px}.level-card:disabled{cursor:not-allowed;opacity:.42;filter:grayscale(1);transform:none}.report-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.report-card{padding:22px}.report-card h3{margin:0 0 14px}.detail-stats{display:grid;gap:7px}.detail-stats article{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.detail-stats article:last-child{border-bottom:0}.detail-stats strong{color:var(--accent)}.detail-stats small{min-width:45px;text-align:right;color:var(--muted)}.theory-topic-report{margin-bottom:12px}.theory-topic-report .detail-stats{grid-template-columns:repeat(2,1fr);gap:0 22px}
 @media(max-width:700px){.report-grid{grid-template-columns:1fr}.theory-topic-report .detail-stats{grid-template-columns:1fr}}
+
+/* V4.1: 청음 문제와 검수된 CAGED 범위 */
+.audio-play-button{display:block;margin:16px 0 4px;padding:12px 16px;border:1px solid var(--accent);border-radius:13px;background:#fff7f2;color:var(--accent-dark);font-weight:900;cursor:pointer}.audio-play-button:hover,.audio-play-button:focus-visible{background:var(--accent);color:#fff}
