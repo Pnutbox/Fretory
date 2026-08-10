@@ -156,7 +156,7 @@ class Fretboard{
       ${visibleInlays.map(n=>`<i class="inlay" style="left:${positionOf(n)}%"></i>`).join('')}
       ${viewEnd>=12&&firstFret<=12?[38,62].map(y=>`<i class="inlay" style="left:${positionOf(12)}%;top:${y}%"></i>`).join(''):''}
       ${barre?`<i class="barre" style="left:${positionOf(barre.fret)}%;top:${16+(5-barre.to)*13.6}%;height:${(barre.to-barre.from)*13.6}%"><span>1</span></i>`:''}
-      ${stringStates.map((state,i)=>state?`<span class="string-state ${state}" style="top:${16+i*13.6}%">${state==='open'?'○':'×'}</span>`:'').join('')}
+      ${stringStates.map((state,i)=>state?`<span class="string-state ${state}" style="top:${16+i*13.6}%" role="img" aria-label="${state==='open'?'개방현':'뮤트'}"></span>`:'').join('')}
       ${tones.filter(t=>t.fret>0&&!(barre&&t.fret===barre.fret&&t.finger===1)).map(t=>`<i class="marker" style="left:${positionOf(t.fret)}%;top:${16+t.string*13.6}%" title="${t.fret}프렛, ${t.finger}번 손가락"><span>${t.finger||''}</span></i>`).join('')||(!tones.length?`<i class="marker" style="left:${positionOf(fret)}%;top:${16+stringIndex*13.6}%"></i>`:'')}
       </div><div class="fret-numbers" aria-hidden="true">${Array.from({length:fretCount},(_,i)=>`<span class="fret-number" style="left:${positionOf(firstFret+i)}%">${firstFret+i}</span>`).join('')}</div></div>`;
   }

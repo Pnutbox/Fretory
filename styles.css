@@ -94,6 +94,42 @@
   color:transparent;
   font-size:0;
 }
+
+/* V4.4: force identical visual boxes for both string-state symbols */
+.fretboard .string-state{
+  left:17px;
+  width:28px;
+  height:28px;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  margin:0;
+}
+.fretboard .string-state::before{
+  display:block;
+  box-sizing:border-box;
+  flex:0 0 auto;
+}
+.fretboard .string-state.open::before{
+  width:17px;
+  height:17px;
+  border-width:2px;
+}
+.fretboard .string-state.muted::before{
+  width:17px;
+  height:17px;
+  font-size:23px;
+  line-height:15px;
+  text-align:center;
+}
+.fretboard-scroll .fret-numbers{height:44px}
+.fretboard-scroll .fret-number{top:5px;font-size:1.24rem;line-height:1.4}
+@media(max-width:620px){
+  .fretboard .string-state{left:15px;width:26px;height:26px}
+  .fretboard-scroll .fret-number{font-size:1.16rem}
+}
 .string-state.open,
 .string-state.muted{
   border:0;
