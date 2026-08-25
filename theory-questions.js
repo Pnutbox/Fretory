@@ -11,6 +11,65 @@ const rotate=(a,n)=>[...a.slice(n),...a.slice(0,n)];
 const choices=(correct,pool,i)=>rotate([correct,...rotate([...new Set(pool.filter(x=>x!==correct))],i).slice(0,3)],i);
 const mcq=(id,topic,question,correct,wrong,explanation,i)=>({id,type:'mcq',topic,question,choices:choices(correct,wrong,i),answer:correct,explanation});
 const ox=(id,topic,question,value,explanation)=>({id,type:'ox',topic,question,choices:['O','X'],answer:value?'O':'X',explanation});
+const tagged=(question,family)=>({...question,family});
+const JAZZ_MINOR_FORMULAS=['1 2 ♭3 4 5 6 7','1 ♭2 ♭3 4 5 6 ♭7','1 2 3 ♯4 ♯5 6 7','1 2 3 ♯4 5 6 ♭7','1 2 3 4 5 ♭6 ♭7','1 2 ♭3 4 ♭5 ♭6 ♭7','1 ♭2 ♭3 ♭4 ♭5 ♭6 ♭7'];
+
+function foundationQuestion(book,level,i){
+  if(level>2)return null;
+  const root=i%12,branch=i%10,note=NOTES[root],up=NOTES[(root+1)%12],down=NOTES[(root+11)%12];
+  if(book===1&&level===1){
+    if(branch===0)return tagged(mcq(`1-1-${i}`,'반음과 온음',`${note}에서 반음 위의 음은?`,up,NOTES,`${note}에서 한 건반 위로 이동하면 ${up}이다.`,i),'semitone-up');
+    if(branch===1)return tagged(mcq(`1-1-${i}`,'반음과 온음',`${note}에서 반음 아래의 음은?`,down,NOTES,`${note}에서 한 건반 아래로 이동하면 ${down}이다.`,i),'semitone-down');
+    if(branch===2){const target=NOTES[(root+2)%12];return tagged(mcq(`1-1-${i}`,'온음 계산',`${note}에서 온음 위의 음은?`,target,NOTES,`온음은 반음 두 칸이므로 정답은 ${target}이다.`,i),'whole-up')}
+    if(branch===3){const pairs=[['C#','D♭'],['D#','E♭'],['F#','G♭'],['G#','A♭'],['A#','B♭']],pair=pick(pairs,i);return tagged(mcq(`1-1-${i}`,'이명동음',`${pair[0]}과 같은 높이로 연주되는 음은?`,pair[1],pairs.map(x=>x[1]),`${pair[0]}과 ${pair[1]}은 표기만 다른 이명동음이다.`,i),'enharmonic')}
+    if(branch===4){const signs=[['♯','반음 높인다'],['♭','반음 낮춘다'],['♮','변화표를 취소한다'],['𝄪','온음 높인다']],s=pick(signs,i);return tagged(mcq(`1-1-${i}`,'변화표',`악보에서 ${s[0]}의 기능은?`,s[1],signs.map(x=>x[1]),`${s[0]}은 음을 ${s[1]}.`,i),'accidental')}
+    if(branch===5){const pairs=[['E','F','반음'],['B','C','반음'],['C','D','온음'],['F','G','온음']],p=pick(pairs,i);return tagged(mcq(`1-1-${i}`,'자연음 간격',`${p[0]}와 ${p[1]} 사이의 간격은?`,p[2],['반음','온음','단3도','완전4도'],`${p[0]}와 ${p[1]} 사이는 ${p[2]}이다.`,i),'natural-gap')}
+    if(branch===6){const values=[['2분음표','4분음표'],['온음표','2분음표'],['4분음표','8분음표']],v=pick(values,i);return tagged(mcq(`1-1-${i}`,'음표 길이',`${v[0]} 하나는 ${v[1]} 몇 개와 길이가 같은가?`,'2',['1','2','3','4'],`${v[0]} 하나의 길이는 ${v[1]} 2개와 같다.`,i),'note-value')}
+    if(branch===7)return tagged(ox(`1-1-${i}`,'점음표','점음표의 점은 원래 음표 길이의 절반을 더한다.',true,'점은 원래 길이의 1/2을 추가한다.'),'dotted-note');
+    if(branch===8)return tagged(ox(`1-1-${i}`,'쉼표','쉼표도 음표처럼 정해진 박의 길이를 나타낸다.',true,'쉼표는 소리 없이 유지하는 시간의 길이를 나타낸다.'),'rest');
+    return tagged(mcq(`1-1-${i}`,'오선과 음자리표','높은음자리표에서 둘째 줄의 기준 음은?','G',['C','F','G','A'],'높은음자리표는 둘째 줄의 G음을 기준으로 그린다.',i),'clef');
+  }
+  if(book===1&&level===2){
+    const semitones=(i*5)%12,interval=INTERVALS[semitones],target=NOTES[(root+semitones)%12];
+    if(branch===0)return tagged(mcq(`1-2-${i}`,'음정 이름',`${semitones}반음에 해당하는 음정은?`,interval,INTERVALS,`${semitones}반음은 ${interval}이다.`,i),'interval-name');
+    if(branch===1)return tagged(mcq(`1-2-${i}`,'음정 계산',`${note}에서 위로 ${semitones}반음 이동한 음은?`,target,NOTES,`반음으로 ${semitones}칸 이동하면 ${target}에 도착한다.`,i),'interval-note');
+    if(branch===2){const triads=[['Major','1 3 5'],['minor','1 ♭3 5'],['augmented','1 3 ♯5'],['diminished','1 ♭3 ♭5']],t=pick(triads,i);return tagged(mcq(`1-2-${i}`,'3화음 공식',`${t[0]} 3화음의 구성 공식은?`,t[1],triads.map(x=>x[1]),`${t[0]} 3화음의 공식은 ${t[1]}이다.`,i),'triad-formula')}
+    if(branch===3){const triads=[['1 3 5','Major'],['1 ♭3 5','minor'],['1 3 ♯5','augmented'],['1 ♭3 ♭5','diminished']],t=pick(triads,i);return tagged(mcq(`1-2-${i}`,'3화음 분석',`${t[0]}에 해당하는 3화음의 성질은?`,t[1],triads.map(x=>x[1]),`${t[0]}은 ${t[1]} 3화음이다.`,i),'triad-quality')}
+    if(branch===4){const roots=[['C','C E G'],['D','D F# A'],['E','E G# B'],['F','F A C'],['G','G B D']],t=pick(roots,i);return tagged(mcq(`1-2-${i}`,'장3화음 구성음',`${t[0]} Major 3화음의 구성음은?`,t[1],roots.map(x=>x[1]),`${t[0]} Major는 ${t[1]}로 구성된다.`,i),'major-notes')}
+    if(branch===5){const roots=[['A','A C E'],['D','D F A'],['E','E G B'],['B','B D F#'],['C','C E♭ G']],t=pick(roots,i);return tagged(mcq(`1-2-${i}`,'단3화음 구성음',`${t[0]} minor 3화음의 구성음은?`,t[1],roots.map(x=>x[1]),`${t[0]} minor는 ${t[1]}로 구성된다.`,i),'minor-notes')}
+    if(branch===6)return tagged(mcq(`1-2-${i}`,'코드 전위','3화음의 3음이 베이스에 놓인 전위는?','제1전위',['기본위치','제1전위','제2전위','제3전위'],'3음이 베이스이면 제1전위이다.',i),'inversion-first');
+    if(branch===7)return tagged(mcq(`1-2-${i}`,'코드 전위','3화음의 5음이 베이스에 놓인 전위는?','제2전위',['기본위치','제1전위','제2전위','제3전위'],'5음이 베이스이면 제2전위이다.',i),'inversion-second');
+    if(branch===8){const inv=[['C/E','E'],['G/B','B'],['D/F#','F#'],['Am/C','C']],t=pick(inv,i);return tagged(mcq(`1-2-${i}`,'슬래시 코드',`${t[0]}에서 베이스음은?`,t[1],NOTES,`슬래시 뒤의 ${t[1]}가 베이스음이다.`,i),'slash-bass')}
+    return tagged(ox(`1-2-${i}`,'코드의 정체성','코드를 전위해도 구성음이 같으면 기본 코드의 성질은 유지된다.',true,'베이스 배열은 달라져도 구성음이 같으면 코드의 기본 성질은 유지된다.'),'inversion-concept');
+  }
+  if(book===2&&level===1){
+    const degree=i%7,mode=MODES[degree];
+    if(branch===0)return tagged(mcq(`2-1-${i}`,'모드 순서',`메이저 스케일의 ${degree+1}번째 음에서 시작하는 모드는?`,mode[0],MODES.map(x=>x[0]),`${degree+1}번째 모드는 ${mode[0]}이다.`,i),'mode-degree');
+    if(branch===1)return tagged(mcq(`2-1-${i}`,'모드 공식',`${mode[0]} 모드의 음정 공식은?`,mode[2],MODES.map(x=>x[2]),`${mode[0]}의 공식은 ${mode[2]}이다.`,i),'mode-formula');
+    if(branch===2)return tagged(mcq(`2-1-${i}`,'모드 특징음','장음계보다 4도가 반음 높은 모드는?','Lydian',MODES.map(x=>x[0]),'Lydian의 특징음은 ♯4이다.',i),'lydian');
+    if(branch===3)return tagged(mcq(`2-1-${i}`,'모드 특징음','장음계보다 7도가 반음 낮은 모드는?','Mixolydian',MODES.map(x=>x[0]),'Mixolydian의 특징음은 ♭7이다.',i),'mixolydian');
+    if(branch===4)return tagged(mcq(`2-1-${i}`,'모드 특징음','단음계보다 6도가 반음 높은 모드는?','Dorian',MODES.map(x=>x[0]),'Dorian은 단3도와 장6도를 함께 가진다.',i),'dorian');
+    if(branch===5)return tagged(mcq(`2-1-${i}`,'모드 특징음','단음계보다 2도가 반음 낮은 모드는?','Phrygian',MODES.map(x=>x[0]),'Phrygian의 특징음은 ♭2이다.',i),'phrygian');
+    if(branch===6)return tagged(mcq(`2-1-${i}`,'모드 성격','메이저 계열 모드가 아닌 것은?','Aeolian',['Ionian','Lydian','Mixolydian','Aeolian'],'Aeolian은 단3도를 가진 마이너 계열 모드이다.',i),'mode-family');
+    if(branch===7)return tagged(mcq(`2-1-${i}`,'모드 중심음','C Major의 음 집합을 D부터 배열하면 어떤 모드인가?','D Dorian',['C Ionian','D Dorian','E Phrygian','G Mixolydian'],'C Major의 두 번째 음 D를 중심으로 하면 D Dorian이다.',i),'relative-mode');
+    if(branch===8)return tagged(ox(`2-1-${i}`,'모드 중심음','같은 음들을 사용해도 중심음이 바뀌면 모드의 울림과 기능이 달라진다.',true,'모드는 음 집합뿐 아니라 중심음이 중요하다.'),'tonal-center');
+    return tagged(mcq(`2-1-${i}`,'Locrian','완전5도 대신 감5도를 갖는 메이저 파생 모드는?','Locrian',MODES.map(x=>x[0]),'Locrian의 공식에는 ♭5가 포함된다.',i),'locrian');
+  }
+  if(book===2&&level===2){
+    const degree=i%7,name=JAZZ_MINOR_MODES[degree],formula=JAZZ_MINOR_FORMULAS[degree];
+    if(branch===0)return tagged(mcq(`2-2-${i}`,'재즈 마이너 모드',`Jazz minor의 ${degree+1}번째 모드는?`,name,JAZZ_MINOR_MODES,`${degree+1}번째 모드는 ${name}이다.`,i),'jazz-degree');
+    if(branch===1)return tagged(mcq(`2-2-${i}`,'재즈 마이너 공식',`${name}의 음정 공식은?`,formula,JAZZ_MINOR_FORMULAS,`${name}의 공식은 ${formula}이다.`,i),'jazz-formula');
+    if(branch===2)return tagged(mcq(`2-2-${i}`,'Altered','변형된 ♭9·♯9·♭5·♯5 텐션을 폭넓게 포함하는 스케일은?','Altered',JAZZ_MINOR_MODES,'Altered는 변화된 도미넌트 텐션을 가장 많이 포함한다.',i),'altered-tensions');
+    if(branch===3)return tagged(mcq(`2-2-${i}`,'Lydian dominant','♯4와 ♭7을 함께 갖는 모드는?','Lydian dominant',JAZZ_MINOR_MODES,'Lydian dominant는 Lydian의 ♯4와 dominant의 ♭7을 함께 가진다.',i),'lydian-dominant');
+    if(branch===4)return tagged(mcq(`2-2-${i}`,'코드 스케일','m7♭5 코드에 대표적으로 연결되는 Jazz minor 파생 모드는?','Locrian ♮2',JAZZ_MINOR_MODES,'Locrian ♮2는 m7♭5에 자주 사용된다.',i),'locrian-natural2');
+    if(branch===5)return tagged(mcq(`2-2-${i}`,'코드 스케일','altered dominant 코드에 대표적으로 사용하는 스케일은?','Altered',JAZZ_MINOR_MODES,'Altered 스케일은 altered dominant의 변화 텐션을 포함한다.',i),'altered-chord');
+    if(branch===6)return tagged(mcq(`2-2-${i}`,'모드 비교','Lydian augmented의 특징적인 변화음 조합은?','♯4 · ♯5',['♯4 · ♯5','♭2 · ♭5','♭3 · ♭7','♮4 · ♭6'],'Lydian augmented는 ♯4와 ♯5를 가진다.',i),'lydian-augmented');
+    if(branch===7)return tagged(mcq(`2-2-${i}`,'모드 비교','Dorian ♭2의 특징적인 시작 간격은?','♭2',['♭2','♮2','♯2','장3도'],'Dorian ♭2는 이름처럼 2도가 반음 낮다.',i),'dorian-flat2');
+    if(branch===8)return tagged(ox(`2-2-${i}`,'Jazz minor','Jazz minor는 자연단음계와 달리 6도와 7도가 모두 장음정이다.',true,'Jazz minor의 공식은 1 2 ♭3 4 5 6 7이다.'),'jazz-minor-concept');
+    return tagged(mcq(`2-2-${i}`,'Altered','Jazz minor의 7번째 모드는?','Altered',JAZZ_MINOR_MODES,'Jazz minor의 7번째 모드는 Altered이다.',i),'altered-degree');
+  }
+  return null;
+}
 
 function book1(level,i){
   const root=i%12,next=(root+1)%12,interval=(i*5)%12,key=pick(MAJOR_KEYS,i),degree=i%7;
@@ -89,7 +148,7 @@ function audioQuestion(book,level,i){
   const qualities=[['Major',[0,4,7]],['minor',[0,3,7]],['augmented',[0,4,8]],['diminished',[0,3,6]]],q=pick(qualities,i+level+book);return{...mcq(`${book}-${level}-${i}`,'청음 · 3화음','재생되는 3화음의 성질은?',q[0],qualities.map(x=>x[0]),`${q[0]} 3화음의 음정 구조를 들을 수 있다.`,i),audio:{kind:'chord',notes:q[1]}}
 }
 
-const makeBook=(book,factory)=>Object.fromEntries([1,2,3,4,5].map(level=>[level,Array.from({length:100},(_,i)=>i>=90?audioQuestion(book,level,i):scenarioQuestion(book,level,i)||diverseQuestion(book,level,i)||factory(level,i))]));
+const makeBook=(book,factory)=>Object.fromEntries([1,2,3,4,5].map(level=>[level,Array.from({length:100},(_,i)=>i>=90?audioQuestion(book,level,i):foundationQuestion(book,level,i)||scenarioQuestion(book,level,i)||diverseQuestion(book,level,i)||factory(level,i))]));
 export const THEORY_LIBRARY={1:makeBook(1,book1),2:makeBook(2,book2)};
 export const THEORY_SCOPES={
   1:{title:'기초 화성학',subtitle:'음정부터 텐션코드까지',description:'기초악전 · 음정 · 3화음 · 조성과 음계 · 다이아토닉 · 7화음 · 텐션'},

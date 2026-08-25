@@ -1,4 +1,4 @@
-import {THEORY_LIBRARY,THEORY_SCOPES,THEORY_LEVELS} from './theory-questions.js';
+import {THEORY_LIBRARY,THEORY_SCOPES,THEORY_LEVELS} from './theory-questions.js?v=4.10.0';
 
 const NOTES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 const STRINGS=[4,11,7,2,9,4]; // 높은 E부터 낮은 E
@@ -180,7 +180,7 @@ class App{
   buildTheoryDeck(){
     const pool=this.theoryPool(),groups=new Map();
     for(const question of pool){
-      const key=question.question.trim();
+      const key=question.family||question.question.trim();
       if(!groups.has(key))groups.set(key,[]);
       groups.get(key).push(question);
     }
@@ -189,9 +189,9 @@ class App{
       if(this.state.adaptiveReview)mixed.sort((a,b)=>(this.state.review.theory[b.id]||0)-(this.state.review.theory[a.id]||0));
       items.splice(0,items.length,...mixed);
     }
-    const deck=[];let previousText=this.lastTheoryText||'';
+    const deck=[];let previousText=this.lastTheoryFamily||this.lastTheoryText||'';
     while(deck.length<pool.length){
-      const candidates=[...groups.entries()].filter(([,items])=>items.length&&items[0].question.trim()!==previousText);
+      const candidates=[...groups.entries()].filter(([key,items])=>items.length&&key!==previousText);
       const available=candidates.length?candidates:[...groups.entries()].filter(([,items])=>items.length);
       const maxRemaining=Math.max(...available.map(([,items])=>items.length));
       const choices=available.filter(([,items])=>items.length===maxRemaining);
@@ -199,7 +199,7 @@ class App{
     }
     return deck;
   }
-  resetTheorySession(){this.lastTheoryText='';this.theoryDeck=this.buildTheoryDeck();this.theoryIndex=0;this.theoryTurn=0;this.theoryReviewDue=new Map();this.currentTheoryIsReview=false}
+  resetTheorySession(){this.lastTheoryText='';this.lastTheoryFamily='';this.theoryDeck=this.buildTheoryDeck();this.theoryIndex=0;this.theoryTurn=0;this.theoryReviewDue=new Map();this.currentTheoryIsReview=false}
   scheduleTheoryReview(){
     if(!this.state.adaptiveReview||!this.currentTheory)return;
     const weight=this.state.review.theory[this.currentTheory.id]||0;
