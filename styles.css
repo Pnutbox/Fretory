@@ -263,3 +263,15 @@
   .feedback{min-height:27px;margin:5px 0;font-size:.83rem}
   #next:not(.hidden){position:fixed;z-index:50;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(360px,calc(100vw - 24px));padding:13px 18px;box-shadow:0 8px 28px rgba(23,34,29,.34)}
 }
+.version-info{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding:15px 2px 2px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+.version-info strong{color:var(--ink);font-size:.9rem}
+
+/* V4.12: 시작 화면 연습 버튼과 아이콘 강조 */
+.home-modes .mode-card,.three-modes .mode-card{position:relative;overflow:hidden;border-width:1.5px;background:linear-gradient(145deg,#fff 0%,#faf8f1 100%);box-shadow:0 9px 24px rgba(23,34,29,.07)}
+.home-modes .mode-card::after,.three-modes .mode-card::after{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--mode-accent,#e66b46)}
+.mode-card[data-mode="note"]{--mode-accent:#d8643f;--mode-soft:#fff0e9}
+.mode-card[data-mode="chord"]{--mode-accent:#39745b;--mode-soft:#e9f4ed}
+.mode-card[data-mode="theory"]{--mode-accent:#735d98;--mode-soft:#f1edf8}
+.mode-icon{display:grid;place-items:center;width:64px;height:64px;border:1px solid color-mix(in srgb,var(--mode-accent) 28%,transparent);border-radius:19px;background:var(--mode-soft);font-size:2.65rem;line-height:1;box-shadow:inset 0 1px 0 #fff,0 5px 13px rgba(23,34,29,.08)}
+.home-modes .mode-card strong,.three-modes .mode-card strong{margin-top:16px}
+@media(max-width:760px){.home-modes .mode-card,.three-modes .mode-card{display:grid;grid-template-columns:62px 1fr;grid-template-rows:auto auto;column-gap:16px;align-items:center;min-height:142px;padding:18px 20px}.mode-icon{grid-row:1/3;width:58px;height:58px;border-radius:17px;font-size:2.4rem}.home-modes .mode-card strong,.three-modes .mode-card strong{grid-column:2;margin:0 0 5px}.home-modes .mode-card>span:last-child,.three-modes .mode-card>span:last-child{grid-column:2}}
