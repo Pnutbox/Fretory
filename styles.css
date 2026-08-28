@@ -278,3 +278,7 @@
 
 /* V4.13: 프렛토리 브랜드 아이콘 */
 .title-wrap::before{background:#76627f url("icons/icon-192.png") center/cover no-repeat;border-color:rgba(75,55,83,.38);box-shadow:0 5px 13px rgba(23,34,29,.16)}
+
+/* V4.14: 학습 모드 아이콘 확대 */
+.home-modes .mode-card .mode-icon,.three-modes .mode-card .mode-icon{width:78px;height:78px;border-radius:22px;font-size:3.25rem!important;line-height:1}
+@media(max-width:760px){.home-modes .mode-card,.three-modes .mode-card{grid-template-columns:82px 1fr;column-gap:18px;min-height:158px}.home-modes .mode-card .mode-icon,.three-modes .mode-card .mode-icon{width:76px;height:76px;border-radius:21px;font-size:3.1rem!important}}
