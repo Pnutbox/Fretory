@@ -286,3 +286,32 @@
 /* V4.15: 설치 앱 뒤로가기 및 종료 안내 */
 .exit-hint{position:fixed;z-index:1000;left:50%;bottom:max(24px,calc(env(safe-area-inset-bottom) + 16px));width:max-content;max-width:calc(100vw - 32px);padding:13px 18px;border-radius:14px;background:rgba(24,29,26,.94);color:#fff;font-size:.9rem;font-weight:800;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.24);opacity:0;transform:translate(-50%,18px);pointer-events:none;transition:opacity .18s,transform .18s}
 .exit-hint.show{opacity:1;transform:translate(-50%,0)}
+
+/* V4.17: 홈 버전 정보, 업데이트 알림, 변경사항 화면 */
+.home-tools{grid-template-columns:repeat(3,minmax(0,1fr));max-width:620px}
+.home-tools .secondary-button{min-width:0;padding-inline:10px}
+.settings .version-info{display:none}
+.home-version{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:16px;color:var(--muted);font-size:.78rem}
+.home-version strong{color:var(--ink);font-size:.86rem}
+.update-notice{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:18px auto 0;padding:15px 17px;border:1px solid rgba(224,93,55,.3);border-radius:17px;background:#fff3ed;text-align:left}
+.update-notice span,.update-notice b,.update-notice small{display:block}
+.update-notice b{color:var(--ink);font-size:.95rem}
+.update-notice small{margin-top:4px;color:var(--muted);line-height:1.45}
+.update-notice .primary-button{flex:none;padding:11px 15px}
+.update-notice .primary-button:disabled{opacity:.65;cursor:wait}
+.changelog-page{max-width:760px}
+.changelog-list{display:grid;gap:13px;margin-top:28px;text-align:left}
+.changelog-item{padding:20px;border:1px solid var(--line);border-radius:19px;background:#fff}
+.changelog-item.latest{border-color:rgba(224,93,55,.42);background:#fff8f4}
+.changelog-item header{display:flex;align-items:center;gap:9px}
+.changelog-item header strong{color:var(--accent);font-size:.83rem;letter-spacing:.05em}
+.changelog-item header span{padding:4px 7px;border-radius:999px;background:var(--accent);color:#fff;font-size:.65rem;font-weight:900}
+.changelog-item h3{margin:9px 0 10px;font-size:1.13rem}
+.changelog-item ul{margin:0;padding-left:19px;color:var(--muted);line-height:1.65}
+@media(max-width:620px){
+  .home-tools{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .home-tools .secondary-button{padding:12px 5px;font-size:.74rem}
+  .update-notice{align-items:stretch;flex-direction:column}
+  .update-notice .primary-button{width:100%}
+  .changelog-item{padding:17px}
+}
