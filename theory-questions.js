@@ -214,8 +214,122 @@ function supplementalQuestion(book,level,i){
   return extensionQuestion(book,level,i)
 }
 
-const makeBook=(book,factory)=>Object.fromEntries([1,2,3,4,5].map(level=>{const count=level<=2?200:100;return[level,Array.from({length:count},(_,i)=>i>=count-10?audioQuestion(book,level,i):i>=100?(i%10<5?extensionQuestion(book,level,i):supplementalQuestion(book,level,i)):foundationQuestion(book,level,i)||scenarioQuestion(book,level,i)||diverseQuestion(book,level,i)||factory(level,i))]}));
-export const THEORY_LIBRARY={1:makeBook(1,book1),2:makeBook(2,book2)};
+// Each level now has ten musical concepts asked in three genuinely different ways:
+// recall, practical application, and error checking. This keeps the deck varied while
+// still letting the adaptive-review scheduler revisit the same underlying concept.
+const ADVANCED_CONCEPTS={
+  1:{
+    3:[
+      ['Major scale','Major scale의 도수 공식은?','1 2 3 4 5 6 7',['1 2 ♭3 4 5 ♭6 ♭7','1 2 ♭3 4 5 6 7','1 ♭2 ♭3 4 5 ♭6 ♭7'],'Major scale은 모든 장·단 음정을 변화 없이 사용한다.','키 안의 음을 찾을 때 으뜸음에서 이 공식을 순서대로 대입한다.'],
+      ['Natural minor','Natural minor의 도수 공식은?','1 2 ♭3 4 5 ♭6 ♭7',['1 2 3 4 5 6 7','1 2 ♭3 4 5 6 7','1 2 ♭3 4 5 ♭6 7'],'Major scale과 비교하면 3·6·7도가 반음 낮다.','마이너 곡의 기본 음 집합과 다이아토닉 코드를 확인할 때 사용한다.'],
+      ['Harmonic minor','Natural minor를 Harmonic minor로 바꿀 때 달라지는 도수는?','7도를 반음 높인다',['6도를 반음 높인다','3도를 반음 높인다','2도를 반음 낮춘다'],'7도를 높이면 으뜸음 아래에 leading tone이 생겨 V-i 해결이 강해진다.','마이너 키의 V7과 leading tone을 분석할 때 먼저 7도를 확인한다.'],
+      ['Melodic minor','상행 Melodic minor가 Natural minor와 다른 점은?','6도와 7도를 반음 높인다',['3도와 6도를 높인다','7도만 높인다','2도와 7도를 낮춘다'],'상행형은 1 2 ♭3 4 5 6 7의 구조를 가진다.','선율이 상행할 때 6도와 7도의 진행이 자연스러운지 확인한다.'],
+      ['Relative key','C Major의 Relative minor는?','A minor',['C minor','E minor','D minor'],'Relative key는 같은 조표를 공유하며 장조의 6도에서 시작한다.','조표는 그대로인데 중심음이 바뀌는 곡을 분석할 때 적용한다.'],
+      ['Parallel key','C Major의 Parallel minor는?','C minor',['A minor','E minor','F minor'],'Parallel key는 같은 tonic을 공유하고 조표와 음 구성이 달라진다.','같은 으뜸음의 장·단조 색채를 비교하거나 차용화음을 찾을 때 쓴다.'],
+      ['Sharp order','조표에 ♯이 붙는 순서는?','F C G D A E B',['B E A D G C F','C D E F G A B','F G A B C D E'],'5도권을 따라 F부터 차례로 ♯이 추가된다.','악보의 ♯ 개수로 Key를 빠르게 판별할 때 이 순서를 사용한다.'],
+      ['Flat order','조표에 ♭이 붙는 순서는?','B E A D G C F',['F C G D A E B','C B A G F E D','B A G F E D C'],'♭의 순서는 ♯ 순서의 역방향이다.','마지막에서 두 번째 ♭을 보고 장조 Key를 찾는 규칙과 함께 활용한다.'],
+      ['Leading tone','Major scale에서 tonic으로 반음 해결하려는 도수는?','7도',['2도','4도','6도'],'7도는 tonic 바로 아래의 반음이어서 강한 상행 해결 성향을 가진다.','멜로디나 V 코드에서 7도가 1도로 해결되는지 귀와 악보로 확인한다.'],
+      ['Circle of fifths','5도권을 시계 방향으로 한 칸 이동하면 일반적으로 어떻게 되는가?','♯이 하나 늘어난다',['♭이 두 개 늘어난다','조표가 사라진다','♭이 하나 늘어난다'],'시계 방향은 으뜸음이 완전5도 올라가며 ♯ 계열 조표가 하나씩 늘어난다.','가까운 Key로 전조하거나 공통 코드를 찾을 때 인접한 위치를 살핀다.']
+    ],
+    4:[
+      ['Diatonic 7th','Major key의 다이아토닉 7화음 순서는?','maj7 m7 m7 maj7 7 m7 m7♭5',['maj7 m7 maj7 7 m7 m7 m7♭5','m7 m7 maj7 maj7 7 m7 dim7','maj7 m7 m7 maj7 m7 7 m7♭5'],'Major scale 각 음 위에 3도씩 네 음을 쌓으면 이 순서가 된다.','Key 안의 코드 후보를 찾을 때 도수와 코드 성질을 함께 읽는다.'],
+      ['Tonic function','Major key에서 tonic 기능에 속하는 대표 도수는?','I · III · VI',['II · IV','V · VII','II · V · VI'],'I·III·VI는 tonic 코드와 공통음이 많아 안정 기능을 공유한다.','진행의 출발·도착과 대리코드를 찾을 때 이 그룹을 확인한다.'],
+      ['Subdominant function','Major key에서 subdominant 기능의 대표 도수는?','II · IV',['I · III','V · VII','III · VI'],'II와 IV는 dominant로 향하는 준비 기능을 담당한다.','ii-V 또는 IV-V 진행에서 긴장이 만들어지는 순서를 분석한다.'],
+      ['Dominant function','Major key에서 dominant 기능의 대표 도수는?','V · VII',['I · VI','II · IV','III · VI'],'V와 VII는 leading tone과 불안정한 음정을 포함해 tonic 해결을 요구한다.','V-I나 vii°-I에서 성부가 반음으로 해결되는지 확인한다.'],
+      ['Dominant seventh','Major key의 V도 7화음 유형은?','7',['maj7','m7','m7♭5'],'V7은 장3화음에 단7도를 더한 dominant seventh다.','3음과 7음이 만드는 tritone의 해결 방향을 코드폼에서도 의식한다.'],
+      ['Leading-tone chord','Major key의 VII도 7화음 유형은?','m7♭5',['maj7','7','m7'],'VII도 위에는 1 ♭3 ♭5 ♭7 구조의 half-diminished 화음이 생긴다.','V7의 일부 음을 공유하는 dominant 대리 기능으로 해석할 수 있다.'],
+      ['First inversion','7화음에서 3음이 bass이면 어떤 전위인가?','제1전위',['기본위치','제2전위','제3전위'],'bass에 놓인 코드톤이 3음이면 제1전위다.','슬래시 코드의 오른쪽 bass음을 코드 구성음과 대조해 판별한다.'],
+      ['Second inversion','7화음에서 5음이 bass이면 어떤 전위인가?','제2전위',['기본위치','제1전위','제3전위'],'bass에 5음이 오면 제2전위다.','기타의 가장 낮은 실제 울림음이 5음인지 확인한다.'],
+      ['Third inversion','7화음에서 7음이 bass이면 어떤 전위인가?','제3전위',['기본위치','제1전위','제2전위'],'네 음 화음의 7음이 bass에 놓인 형태가 제3전위다.','7음이 아래 성부에서 다음 코드의 3음으로 하행하는 흐름을 살핀다.'],
+      ['Authentic cadence','가장 전형적인 authentic cadence의 진행은?','V → I',['IV → I','V → vi','ii → IV'],'dominant가 tonic으로 해결되며 조성이 가장 분명하게 확정된다.','마지막 두 코드의 bass와 leading tone이 tonic으로 해결되는지 들어 본다.']
+    ],
+    5:[
+      ['Ninth','텐션 9를 한 옥타브 안으로 줄이면?','2도',['3도','4도','6도'],'복합음정 9도에서 7을 빼면 단순음정 2도가 된다.','코드폼에서 9음과 루트가 단9도로 붙지 않는지 확인한다.'],
+      ['Eleventh','텐션 11을 한 옥타브 안으로 줄이면?','4도',['2도','5도','6도'],'11도는 한 옥타브 위의 4도다.','Major 계열 코드에서는 3음과 11의 단9도 충돌을 우선 점검한다.'],
+      ['Thirteenth','텐션 13을 한 옥타브 안으로 줄이면?','6도',['4도','5도','7도'],'13도는 한 옥타브 위의 6도다.','dominant 보이싱에서 13이 ♭7과 함께 색채를 만드는지 들어 본다.'],
+      ['Dominant 9','9 코드의 핵심 도수 공식은?','1 3 5 ♭7 9',['1 3 5 7 9','1 ♭3 5 ♭7 9','1 3 5 6 9'],'dominant 7 구조에 9를 더한 화음이다.','기타에서는 3음·♭7을 남기고 필요하면 5음을 생략해 기능을 보존한다.'],
+      ['Major 9','maj9 코드의 핵심 도수 공식은?','1 3 5 7 9',['1 3 5 ♭7 9','1 ♭3 5 ♭7 9','1 3 5 7 ♭9'],'maj7에 장9도를 더한 구조다.','7음과 9음이 멜로디와 충돌하지 않는 포지션을 선택한다.'],
+      ['Minor 9','m9 코드의 핵심 도수 공식은?','1 ♭3 5 ♭7 9',['1 3 5 7 9','1 3 5 ♭7 9','1 ♭3 ♭5 ♭7 9'],'m7에 장9도를 더해 minor 성질과 부드러운 확장을 함께 만든다.','♭3과 ♭7을 우선 확보한 뒤 9음을 위 성부에 배치한다.'],
+      ['Dominant 13','13 코드의 기능을 가장 분명히 하는 핵심음 조합은?','3 · ♭7 · 13',['1 · 4 · 5','♭3 · 5 · 7','2 · 4 · 6'],'3음과 ♭7이 dominant 기능을, 13이 확장 색채를 만든다.','음 수가 제한된 기타에서는 루트나 5음을 생략하고 이 핵심음을 남길 수 있다.'],
+      ['Avoid note','일반적인 avoid note 판단의 핵심 기준은?','중요 코드톤과 단9도 충돌',['루트와 완전5도','모든 장2도 관계','같은 음의 중복'],'강박에서 지속되는 단9도는 코드의 성질을 흐리거나 거친 충돌을 만들 수 있다.','멜로디 음을 길게 유지한 채 코드톤과 함께 울려 실제 충돌을 확인한다.'],
+      ['Voicing omission','확장 코드 보이싱에서 가장 먼저 생략하기 쉬운 음은?','5음',['3음','7음','텐션'],'완전5도는 많은 코드에서 성질과 기능을 결정하는 정보량이 상대적으로 적다.','3음·7음·필요한 텐션을 우선 배치해 작은 손 모양으로 정리한다.'],
+      ['Melody compatibility','텐션 코드를 선택하기 전에 가장 먼저 확인할 것은?','멜로디 음과 코드톤의 간격',['코드 이름의 글자 수','기타 줄의 개수','템포 표시만'],'같은 텐션도 멜로디와의 간격과 지속 위치에 따라 사용 가능성이 달라진다.','멜로디를 최고음으로 놓고 아래 코드폼을 바꾸어 가장 자연스러운 보이싱을 고른다.']
+    ]
+  },
+  2:{
+    3:[
+      ['Ionian tensions','Ionian의 대표 available tension은?','9 · 13',['♭9 · ♭13','♯9 · ♯11','11 · ♭13'],'Ionian의 11은 장3도와 단9도로 충돌하기 쉬워 보통 주의한다.','maj7 코드 위에서 9·13을 길게 유지해 안정적인 색채를 확인한다.'],
+      ['Dorian tensions','Dorian m7에서 대표적으로 사용할 수 있는 tension은?','9 · 11 · 13',['♭9 · 11 · ♭13','9 · ♯11 · 13','♯9 · 11 · ♭13'],'Dorian의 장6도는 m7 위에서 특징적인 13 tension이 된다.','minor vamp에서 13을 강조해 Aeolian과 다른 색채를 만든다.'],
+      ['Phrygian tension','Phrygian m7에서 특히 주의할 음은?','♭9',['9','♯11','13'],'♭2는 루트와 단9도를 만들어 강박에서 길게 쓰면 충돌이 크다.','♭9는 경과음이나 짧은 장식음으로 처리하고 해결을 들어 본다.'],
+      ['Lydian tension','Lydian maj7의 대표 특징 tension은?','♯11',['♭9','♭13','♯9'],'올라간 4도는 장3도와의 단9도 충돌을 피하면서 Lydian 색채를 만든다.','maj7 보이싱 위에 ♯11을 최고음으로 놓아 Ionian과 비교한다.'],
+      ['Mixolydian tensions','Mixolydian 7의 대표 available tension은?','9 · 13',['♭9 · ♭13','♯9 · ♯11','11 · 13'],'자연 11은 장3도와 충돌하기 쉬우며 9와 13이 기본 확장음이다.','dominant vamp에서 3·♭7을 유지하고 9 또는 13을 추가한다.'],
+      ['Aeolian tensions','Aeolian m7의 기본 tension 선택은?','9 · 11',['♭9 · ♯11','9 · 13','♯9 · ♭13'],'9와 11은 자연스럽고 ♭13은 기능과 보이싱에 따라 주의가 필요하다.','Dorian의 13과 Aeolian의 ♭13을 번갈아 연주해 차이를 익힌다.'],
+      ['Locrian tensions','Locrian m7♭5의 특징을 살리는 tension은?','11 · ♭13',['9 · 13','♯11 · 13','♭9 · 7'],'♭5를 가진 코드 위에서 11과 ♭13이 모드의 색을 보완하며 ♭9는 루트와 충돌한다.','m7♭5 보이싱의 ♭5를 유지한 채 11을 선율음으로 시험한다.'],
+      ['Minor ninth rule','available tension을 거르는 대표 기준은?','중요 코드톤과 단9도 충돌 여부',['완전5도 존재 여부만','루트 중복 여부만','음 이름의 철자 수'],'조성 안의 음이라도 중요 코드톤과 단9도면 강한 충돌을 만들 수 있다.','후보음을 한 옥타브 안으로 옮겨 각 코드톤과의 간격을 계산한다.'],
+      ['Chord-scale context','코드 스케일을 선택할 때 함께 확인해야 할 것은?','조성 · 코드 기능 · 해결 방향',['코드 기호만','템포만','악기 종류만'],'같은 코드 기호도 앞뒤 진행과 기능에 따라 적합한 tension이 달라진다.','목표 코드와 다음 코드까지 연주해 스케일 음의 해결을 검증한다.'],
+      ['Guide tones','7화음의 기능과 성질을 가장 간결하게 보여 주는 guide tones는?','3음 · 7음',['루트 · 5음','2음 · 6음','4음 · 5음'],'3음은 장·단 성질을, 7음은 maj7·dominant·minor7 차이를 결정한다.','기타에서 3음과 7음만 연결해 진행의 최소 보이스 리딩을 연습한다.']
+    ],
+    4:[
+      ['Major ii-V-I','Major ii-V-I의 코드 유형 순서는?','m7 → 7 → maj7',['m7♭5 → 7 → m','maj7 → m7 → 7','7 → m7 → maj7'],'Major key의 II·V·I 위에 7화음을 쌓은 표준 진행이다.','각 코드의 3음과 7음을 반음 또는 온음의 최소 이동으로 연결한다.'],
+      ['Minor ii-V-i','Minor ii-V-i의 대표 코드 유형 순서는?','m7♭5 → 7alt → m',['m7 → 7 → maj7','maj7 → 7 → m7','dim7 → maj7 → 7'],'minor의 iiø와 변화 dominant가 tonic minor로 강하게 해결된다.','V7alt의 변화 tension을 다음 m 코드톤으로 반음 해결한다.'],
+      ['Secondary dominant','Secondary dominant의 핵심 기능은?','목표 코드의 일시적인 V7',['평행조의 IV','tonic의 대리만','조표를 영구 변경'],'다이아토닉 코드 하나를 잠시 tonic처럼 보고 그 앞에 V7을 둔다.','목표 코드의 루트에서 완전5도 위 코드를 dominant7으로 만든다.'],
+      ['V of V','V/V가 해결하려는 목표 도수는?','V',['I','IV','vi'],'V도 코드를 잠시 tonic으로 보고 만든 dominant가 V/V다.','V/V의 3음이 다음 V 코드의 루트로 반음 해결되는지 확인한다.'],
+      ['Tritone substitution','Tritone substitution이 원래 V7을 대신할 수 있는 이유는?','3음과 7음의 tritone을 공유한다',['루트가 같다','모든 음이 같다','같은 조표만 쓴다'],'두 dominant7의 guide tones가 enharmonic으로 같은 tritone을 이룬다.','대리 코드의 루트가 목표 tonic으로 반음 하행하는 bass 움직임을 들어 본다.'],
+      ['Modal interchange','Modal interchange의 뜻은?','같은 tonic의 평행 모드에서 코드 차용',['관계조로 완전 전조','코드 순서를 역행','모든 코드를 dominant로 변경'],'중심음은 유지하면서 평행 장·단조나 모드의 코드를 빌려 색채를 바꾼다.','Major key에서 ivm·♭VI·♭VII 같은 차용 코드를 찾아 본다.'],
+      ['Backdoor cadence','대표적인 backdoor cadence 진행은?','♭VII7 → I',['V7 → I','IV → V','ii → iii'],'♭VII7이 정통 V7과 다른 방향에서 tonic으로 부드럽게 접근한다.','♭VII7의 guide tones가 I 코드톤으로 어떻게 반음 이동하는지 확인한다.'],
+      ['Turnaround','대표적인 turnaround 진행은?','I → VI → II → V',['I → IV → I','V → IV → I','II → III → IV'],'tonic에서 출발해 dominant로 돌아가 다음 구간의 I을 준비한다.','각 도수를 7화음으로 연주하며 VI와 II가 secondary dominant로 바뀌는 경우도 비교한다.'],
+      ['Dominant resolution','V7에서 I로 갈 때 guide tones의 전형적 해결은?','3음은 tonic으로, 7음은 3음으로',['두 음 모두 그대로','3음은 5음으로, 7음은 루트로','두 음 모두 반음 상승'],'V7의 3음은 leading tone이고 7음은 하행 해결 성향을 가진다.','두 성부만 따로 연주해 서로 반대 방향의 반음 해결을 귀에 익힌다.'],
+      ['Deceptive cadence','deceptive cadence의 대표 진행은?','V → vi',['V → I','IV → I','ii → V'],'dominant가 예상한 I 대신 공통음을 가진 vi로 진행해 종결을 미룬다.','V 다음에 I과 vi를 번갈아 연주해 기대와 우회의 차이를 느낀다.']
+    ],
+    5:[
+      ['Slash chord','C/E에서 지정된 bass음은?','E',['C','G','B'],'슬래시 뒤의 음이 실제 최저음으로 지정된다.','기타의 가장 낮게 울리는 줄이 E인지 확인하고 불필요한 저음은 뮤트한다.'],
+      ['Pedal point','화음이 바뀌어도 한 성부의 음을 지속하는 기법은?','pedal point',['passing tone','anticipation','escape tone'],'지속되는 음 주변에서 화성이 변하며 긴장과 통일감을 만든다.','개방현이나 bass음을 유지한 채 상부 코드폼만 바꾸어 연습한다.'],
+      ['Passing tone','두 코드톤 사이를 순차 진행으로 잇는 비화성음은?','passing tone',['neighbor tone','suspension','appoggiatura'],'경과음은 한 코드톤에서 다른 코드톤으로 같은 방향의 순차 이동을 만든다.','스케일의 중간음을 약박에 넣고 양쪽 도착음이 코드톤인지 확인한다.'],
+      ['Neighbor tone','코드톤에서 순차 이탈했다가 같은 음으로 돌아오는 음은?','neighbor tone',['passing tone','anticipation','pedal point'],'보조음은 출발음과 도착음이 같은 장식 구조다.','한 프렛 위나 아래를 거쳐 원래 코드톤으로 돌아오는 짧은 프레이즈를 만든다.'],
+      ['Suspension','suspension의 전형적인 과정은?','준비 · 지속 · 순차 해결',['도약 · 지속 · 도약','순차 · 도약 · 반복','즉시 반복 · 종지'],'앞 화음의 코드톤이 다음 화음까지 남아 불협을 만든 뒤 순차 해결된다.','4-3 또는 9-8 suspension을 상부 성부에서 유지해 해결감을 듣는다.'],
+      ['Anticipation','다음 화음의 코드톤을 화음보다 먼저 내는 비화성음은?','anticipation',['suspension','escape tone','pedal point'],'선행음은 다음 화음에 속할 음을 미리 들려주고 화음이 뒤따라 확인한다.','코드 전환 직전 약박에 다음 코드의 최고음을 먼저 연주한다.'],
+      ['Appoggiatura','appoggiatura의 대표적인 접근과 해결은?','도약 접근 후 순차 해결',['순차 접근 후 도약 이탈','같은 음 반복','순차 접근 후 같은 방향 진행'],'전타음은 강박의 비화성음으로 도약해 들어와 순차적으로 코드톤에 해결된다.','멜로디의 강박 음이 코드톤으로 한 음 내려가거나 올라가는지 확인한다.'],
+      ['Escape tone','escape tone의 대표적인 움직임은?','순차 접근 후 반대 방향 도약',['도약 접근 후 순차 해결','같은 음으로 복귀','한 음 지속'],'이탈음은 코드톤에서 순차 이동한 뒤 반대 방향으로 도약해 벗어난다.','짧은 선율을 만들고 접근·이탈 방향이 서로 반대인지 표시한다.'],
+      ['Voice leading','매끄러운 voice leading의 기본 원리는?','공통음 유지와 최소 이동',['모든 성부를 같은 방향 도약','루트만 반복','각 음을 한 옥타브 이동'],'성부별 이동 거리를 줄이고 공통음을 유지하면 연결이 자연스럽다.','인접 코드폼에서 같은 손가락 음을 남기고 나머지만 가까운 음으로 이동한다.'],
+      ['Reharmonization','reharmonization의 의미는?','멜로디를 유지하며 화음을 새롭게 구성',['멜로디를 삭제','박자만 변경','모든 음을 반음 상승'],'같은 선율 아래의 기능·bass·대리 코드를 바꾸어 새로운 진행을 만든다.','멜로디 음을 코드톤 또는 tension으로 포함하는 대체 코드를 여러 개 시험한다.']
+    ]
+  }
+};
+
+const VARIANT_LABELS=['개념 확인','연주 상황','오류 점검'];
+const CONTEXTS=['악보를 분석하는 중이다.','기타 보이싱을 고르는 중이다.','코드 진행을 귀로 확인하는 중이다.','멜로디와 화음을 함께 편곡하는 중이다.'];
+function enrichExplanation(question,book,level,application){
+  const steps=level<=2?'먼저 기준음·도수·공식을 확인하고, 보기마다 달라지는 한 요소를 비교한다.':level===3?'먼저 tonic과 조표를 정한 뒤 스케일 도수와 코드톤의 관계를 차례로 확인한다.':level===4?'먼저 Key와 코드의 도수 기능을 찾고, bass와 guide tone의 해결 방향을 확인한다.':'먼저 코드의 3음·7음으로 성질과 기능을 잡고, 멜로디·텐션·성부 이동의 충돌을 확인한다.';
+  return `${question.explanation} 판단 순서: ${steps} 연주·분석 적용: ${application||'정답을 실제 코드폼이나 짧은 진행에 대입하고, 앞뒤 음의 움직임까지 소리로 확인한다.'}`;
+}
+function varyQuestion(base,book,level,i,application){
+  const variant=Math.floor(i/10)%3,family=`${base.family||`concept-${i%10}`}-${VARIANT_LABELS[variant]}`;
+  let question={...base,id:`${book}-${level}-${i}`,family};
+  if(variant===1)question={...question,topic:`상황형 · ${base.topic}`,question:`${pick(CONTEXTS,i)} ${base.question}`};
+  if(variant===2&&base.type==='mcq'){
+    const useCorrect=Math.floor(i/30)%2===0,claim=useCorrect?base.answer:base.choices.find(choice=>choice!==base.answer);
+    question=ox(`${book}-${level}-${i}`,`판단형 · ${base.topic}`,`${base.question.replace(/\?$/,'')} 답을 “${claim}”이라고 판단했다. 이 판단은 옳다.`,useCorrect,base.explanation);
+    question.family=family;
+  }else if(variant===2){
+    question={...question,topic:`판단형 · ${base.topic}`,question:`오류 점검: ${base.question}`};
+  }
+  question.explanation=enrichExplanation(question,book,level,application);
+  return question;
+}
+function conceptQuestion(book,level,i){
+  const data=ADVANCED_CONCEPTS[book][level][i%10],variant=Math.floor(i/10)%3;
+  const [topic,prompt,answer,wrong,why,application]=data;
+  const base=tagged(mcq(`${book}-${level}-${i}`,topic,prompt,answer,wrong,why,i),`core-${i%10+1}`);
+  return varyQuestion(base,book,level,i,application);
+}
+function standardQuestion(book,level,i){
+  if(level>=3)return conceptQuestion(book,level,i);
+  // Re-seed every block so all ten concepts receive each of the three formats.
+  const seed=(i%10)+Math.floor(i/30)*10;
+  return varyQuestion(foundationQuestion(book,level,seed),book,level,i);
+}
+const makeBook=book=>Object.fromEntries([1,2,3,4,5].map(level=>{const count=level<=2?200:100;return[level,Array.from({length:count},(_,i)=>i>=count-10?(()=>{const q=audioQuestion(book,level,i);q.explanation=enrichExplanation(q,book,level,'첫 음을 기준으로 반음 수나 3화음의 3도 쌓임을 귀로 구분하고, 재생 뒤 건반이나 지판에서 같은 소리를 확인한다.');return q})():standardQuestion(book,level,i))]}));
+export const THEORY_LIBRARY={1:makeBook(1),2:makeBook(2)};
 export const THEORY_SCOPES={
   1:{title:'기초 화성학',subtitle:'음정부터 텐션코드까지',description:'기초악전 · 음정 · 3화음 · 조성과 음계 · 다이아토닉 · 7화음 · 텐션'},
   2:{title:'응용 화성학',subtitle:'모드부터 코드 진행까지',description:'모드 · 재즈 마이너 스케일 · 다이아토닉 텐션 · 세컨더리 도미넌트 · 2-5-1 · 모달 인터체인지 · 분수 코드 · 비화성음 · 보이스 리딩'}
