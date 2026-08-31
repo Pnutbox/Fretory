@@ -1,6 +1,7 @@
-import {THEORY_LIBRARY,THEORY_SCOPES,THEORY_LEVELS} from './theory-questions.js?v=4.17.0';
-const APP_VERSION='4.17.0';
+import {THEORY_LIBRARY,THEORY_SCOPES,THEORY_LEVELS} from './theory-questions.js?v=4.18.0';
+const APP_VERSION='4.18.0';
 const VERSION_HISTORY=[
+  {version:'4.18.0',title:'문제 지판 너비 조정',items:['음·코드 문제의 지판 너비를 조금 축소','화면 가운데 정렬과 기존 프렛·마커 좌표 유지']},
   {version:'4.17.0',title:'업데이트 안내와 변경사항',items:['현재 버전을 메인 화면 하단으로 이동','새 버전 준비 시 알림과 바로 업데이트 버튼 표시','메인 화면에서 버전별 변경사항 확인']},
   {version:'4.16.0',title:'화성학 전 단계 확장',items:['모든 범위·난이도를 단계별 30개 핵심 유형으로 확장','정답 근거·판단 순서·연주 적용을 포함한 상세 해설']},
   {version:'4.15.0',title:'설치 앱 뒤로가기 개선',items:['내부 화면에서는 이전 페이지로 이동','첫 화면에서는 한 번 더 누르면 종료된다는 안내 표시']},

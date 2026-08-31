@@ -1,5 +1,5 @@
-const CACHE='fretory-v4.17.0';
-const ASSETS=['./','./index.html','./styles.css?v=4.17.0','./app.js?v=4.17.0','./theory-questions.js?v=4.17.0','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
+const CACHE='fretory-v4.18.0';
+const ASSETS=['./','./index.html','./styles.css?v=4.18.0','./app.js?v=4.18.0','./theory-questions.js?v=4.18.0','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting()});

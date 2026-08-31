@@ -315,3 +315,7 @@
   .update-notice .primary-button{width:100%}
   .changelog-item{padding:17px}
 }
+
+/* V4.18: 문제 지판 폭을 줄이고 중앙 정렬 */
+.quiz-card #board{width:min(92%,900px);margin-inline:auto}
+@media(max-width:620px){.quiz-card #board{width:94%}}
