@@ -1,6 +1,7 @@
-import {THEORY_LIBRARY,THEORY_SCOPES,THEORY_LEVELS} from './theory-questions.js?v=5.1.0';
-const APP_VERSION='5.1.0';
+import {THEORY_LIBRARY,THEORY_SCOPES,THEORY_LEVELS} from './theory-questions.js?v=5.1.1';
+const APP_VERSION='5.1.1';
 const VERSION_HISTORY=[
+  {version:'5.1.1',title:'CAGED 비교 선택지 보강',items:['1단계에서도 같은 코드의 서로 다른 CAGED 폼을 항상 3개 제시','비교용 폼은 연습 프렛 범위와 분리해 형태 학습 보장']},
   {version:'5.1.0',title:'연결 훈련 지판 사용성 개선',items:['CAGED 선택지에 실제 줄·프렛 코드폼 그림 표시','코드톤·펜타토닉 문제에서 모든 줄·프렛 교차점 선택 가능','정답 후 도수와 선택 방법을 지판 위에 직접 표시']},
   {version:'5.0.0',title:'코드·스케일 연결',items:['다이어토닉 코드→CAGED→코드톤→펜타토닉 4단계 시각 훈련 추가','난이도·키·CAGED 폼·프렛 범위·힌트·문제 수 설정','도수 7은 장7도, ♭7은 단7도로 표기 원칙 통일']},
   {version:'4.18.0',title:'문제 지판 너비 조정',items:['음·코드 문제의 지판 너비를 조금 축소','화면 가운데 정렬과 기존 프렛·마커 좌표 유지']},
@@ -328,6 +329,9 @@ App.prototype.answerConnection=function(button,answer){if(this.connectionAnswere
 
 const connectionRenderWithGrid=App.prototype.renderConnectionStage;
 App.prototype.renderConnectionStage=function(){connectionRenderWithGrid.call(this);if(this.connectionSession?.stages[this.connectionSession.stageIndex]==='caged'){const q=this.connectionSession.current,p=this.screen.querySelector('.connection-question'),help=this.screen.querySelector('.stage-explainer');if(p)p.innerHTML=`이번 연결에서 사용할 <b>${this.displayChord(q.name)} ${q.shape.family}형</b> 코드폼을 그림에서 찾으세요.`;if(help)help.textContent='각 그림의 주황색 점은 실제로 누르는 줄과 프렛입니다. 왼쪽 아래 숫자는 시작 프렛이며, 정답을 고른 뒤 이 모양을 다음 코드톤 문제에서 그대로 사용합니다.'}};
+
+const connectionRenderWithThreeShapes=App.prototype.renderConnectionStage;
+App.prototype.renderConnectionStage=function(){const isCaged=this.connectionSession?.stages[this.connectionSession.stageIndex]==='caged',originalPool=this.connectionPool;if(isCaged){const q=this.connectionSession.current;this.connectionPool=()=>CAGED_SHAPES.filter(shape=>shape.name===q.name).map(shape=>({name:q.name,shape}))}connectionRenderWithThreeShapes.call(this);this.connectionPool=originalPool;if(isCaged){const count=this.screen.querySelectorAll('.shape-choice').length,help=this.screen.querySelector('.stage-explainer');if(help)help.textContent+=` 현재 ${count}개의 서로 다른 폼을 비교합니다.`}};
 
 const baseStatistics=App.prototype.statistics;
 App.prototype.statistics=function(){baseStatistics.call(this);const score=this.state.scores.connection,rate=score.total?Math.round(score.correct/score.total*100):0,labels=Object.fromEntries(CONNECTION_STAGES);const section=document.createElement('section');section.className='connection-stats-block';section.innerHTML=`<h3 class="stats-section-title">코드·스케일 연결</h3><div class="stats-grid"><article class="stat-card card"><small>누적 연결 정확도</small><strong>${rate}%</strong><span>${score.correct}/${score.total}단계</span></article>${Object.entries(this.state.details.connectionStage).filter(([,x])=>x.total).map(([id,x])=>`<article class="stat-card card"><small>${labels[id]}</small><strong>${Math.round(x.correct/x.total*100)}%</strong><span>${x.correct}/${x.total}단계</span></article>`).join('')}</div>`;this.screen.querySelector('.stats-hero')?.after(section)};
