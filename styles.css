@@ -336,9 +336,8 @@
 .shape-choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:620px;margin:0 auto}
 .shape-choice{display:grid;gap:5px;padding:20px 12px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink)}
 .shape-choice strong{font-size:1.12rem}.shape-choice small{color:var(--muted)}
-.shape-choice.correct,.theory-choice.correct{border-color:#2d7b55;background:#e9f6ee}.shape-choice.wrong{border-color:#b64b37;background:#fff0ec}
-.connection-quiz .theory-choice.correct,.connection-quiz .shape-choice.correct{color:#173b2b!important}
-.connection-quiz .theory-choice.wrong,.connection-quiz .shape-choice.wrong{color:#65271e!important}
+.shape-choice.correct,.theory-choice.correct{border-color:#2d7b55;background:#e9f6ee;color:#173b2b}
+.shape-choice.wrong,.theory-choice.wrong{border-color:#b64b37;background:#fff0ec;color:#65271e}
 .connection-board{margin:14px auto 20px;max-width:850px}
 .connection-neck{position:relative;height:260px;border:5px solid #322f2a;border-radius:13px;background:linear-gradient(90deg,#171714,#27241f);overflow:hidden}
 .connection-fret{position:absolute;top:0;bottom:0;width:3px;background:linear-gradient(90deg,#777,#eee,#777)}
@@ -347,7 +346,9 @@
 .connection-node.empty{background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.55);box-shadow:none}
 .connection-node.empty:hover,.connection-node.empty:focus-visible{background:rgba(255,255,255,.32);border-color:#fff}
 .connection-node.selected{background:#ef7049;color:#fff}.connection-node.correct,.connection-node.locked{background:#ef7049;color:#fff}.connection-node.wrong{background:#913b31;color:#fff}
-.connection-fret-labels{display:flex;justify-content:space-around;padding:7px 0;color:var(--ink);font-size:1rem;font-weight:900}
+.connection-node.locked{background:#276b50;color:#fff}
+.connection-fret-labels{position:relative;margin-inline:5px;height:2em;color:var(--ink);font-size:1rem;font-weight:900}
+.connection-fret-labels span{position:absolute;top:5px;transform:translateX(-50%)}
 .connection-hint{margin:16px auto 8px;padding:12px 14px;border-radius:13px;background:#fff6df;color:#6e542b;font-size:.83rem;line-height:1.5}
 .stage-explainer,.board-guide{color:var(--muted);font-size:.8rem;line-height:1.55;text-align:center}
 .board-guide{display:flex;justify-content:space-between;gap:12px;margin:0 auto 7px;max-width:850px}
